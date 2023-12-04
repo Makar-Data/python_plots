@@ -78,6 +78,7 @@ plt.show()
 ```
 ![image](https://github.com/Makar-Data/python_plots/assets/152608115/fae731a0-2a9b-4b2b-a6e9-504d9f81c49c)
 
+---
 
 ## Половозрастная пирамида с категориями (Plotly)
 Dataset: https://www.kaggle.com/datasets/utkarshx27/suicide-attempts-in-shandong-china
@@ -157,6 +158,8 @@ data = [go.Bar(y=y,
 plot(dict(data=data, layout=layout))
 ```
 ![image](https://github.com/Makar-Data/python_plots/assets/152608115/3256196f-50f3-438a-a1c8-dd012f2bc8d8)
+
+---
 
 ## Дискретное распределение мнений
 Dataset: https://www.kaggle.com/datasets/osmi/mental-health-in-tech-2016
