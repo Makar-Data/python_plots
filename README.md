@@ -159,6 +159,7 @@ plot(dict(data=data, layout=layout))
 ![image](https://github.com/Makar-Data/python_plots/assets/152608115/3256196f-50f3-438a-a1c8-dd012f2bc8d8)
 
 ## Дискретное распределение мнений
+Dataset: https://www.kaggle.com/datasets/osmi/mental-health-in-tech-2016
 ```Python
 import matplotlib.pyplot as plt
 import pandas as pd
