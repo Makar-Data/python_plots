@@ -160,68 +160,80 @@ plot(dict(data=data, layout=layout))
 
 ## Дискретное распределение мнений
 ```Python
-import matplotlib.pyplot as plt  
-import pandas as pd  
-import numpy as np  
-  
-df = pd.read_csv("mental.csv") ###DATA###
-category_names = ["No", "Don't know", "Yes"] ###DATA### То же, что в csv
-needed = df.iloc[:,[15, 24]] ###DATA###
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
-questions = list(needed.columns.values)  
-raws = []  
-  
-list_obj_cols = needed.columns[needed.dtypes == "object"].tolist()  
-for obj_col in list_obj_cols:  
-    needed[obj_col] = needed[obj_col].astype(pd.api.types.CategoricalDtype(categories=category_names))  
-  
-list_cat_cols = needed.columns[needed.dtypes == "category"].tolist()  
-for cat_col in list_cat_cols:  
-    dc = needed[cat_col].value_counts().sort_index().reset_index().to_dict(orient="list")  
-    raws.append(dc["count"])  
-    print("Question surveyed:", dc)  
-print("Qustions:", questions)  
-  
-results = [[num/sum(brackets)*100 for num in brackets] for brackets in raws]  
-number_results = {questions[i]: raws[i] for i in range(len(questions))}  
-percentage_results = {questions[i]: results[i] for i in range(len(questions))}  
-  
-print("")  
-print("Graph input:", percentage_results)  
-  
-  
-def survey(number_results, percentage_results, category_names):  
-    labels = list(percentage_results.keys())  
-    data = np.array(list(percentage_results.values()))  
-    data_cum = data.cumsum(axis=1)  
-    category_colors = plt.get_cmap("RdYlGn")(  
-        np.linspace(0.15, 0.85, data.shape[1]))  
-  
-    fig, ax = plt.subplots(figsize=(9.2, 5))  
-    ax.invert_yaxis()  
-    ax.xaxis.set_visible(False)  
-    ax.set_xlim(0, np.sum(data, axis=1).max())  
-  
-    for i, (colname, color) in enumerate(zip(category_names, category_colors)):  
-        widths = data[:, i]  
-        starts = data_cum[:, i] - widths  
-        ax.barh(labels, widths, left=starts, height=0.5,  
-                label=colname, color=color)  
-  
-        xcenters = starts + widths / 2  
-        numbers = np.array(list(number_results.values()))[:, i]  
-  
-        r, g, b, _ = color  
-        text_color = "white" if r * g * b < 0.5 else "darkgrey"  
-        for y, (x, c) in enumerate(zip(xcenters, numbers)):  
-            ax.text(x, y, str(int(c)),  
-                    ha="center", va="center", color=text_color)  
-    ax.legend(ncol=len(category_names), bbox_to_anchor=(0, 1),  
-              loc="lower left", fontsize="small")  
-    return fig, ax  
-  
-  
-survey(number_results, percentage_results, category_names)  
-plt.savefig("Discrete.png")  
+df = pd.read_csv("mental.csv")  ###DATA###
+category_names = ["No", "Maybe", "Yes"]  ###DATA### То же, что в csv
+needed = df.iloc[:, [10, 11]]  ###DATA###
+
+questions = list(needed.columns.values)
+raws = []
+
+list_obj_cols = needed.columns[needed.dtypes == "object"].tolist()
+for obj_col in list_obj_cols:
+    needed[obj_col] = needed[obj_col].astype(pd.api.types.CategoricalDtype(categories=category_names))
+
+list_cat_cols = needed.columns[needed.dtypes == "category"].tolist()
+for cat_col in list_cat_cols:
+    dc = needed[cat_col].value_counts().sort_index().reset_index().to_dict(orient="list")
+    raws.append(dc["count"])
+    print("Question surveyed:", dc)
+print("Qustions:", questions)
+
+results = [[num / sum(brackets) * 100 for num in brackets] for brackets in raws]
+number_results = {questions[i]: raws[i] for i in range(len(questions))}
+percentage_results = {questions[i]: results[i] for i in range(len(questions))}
+
+### Ручная замена labels ###
+percentage_results["Ment. disc. negative conseq."] = \
+    percentage_results["Do you think that discussing a mental health disorder with your employer would have negative consequences?"]
+percentage_results["Phys. disc. negative conseq."] = \
+    percentage_results["Do you think that discussing a physical health issue with your employer would have negative consequences?"]
+
+del percentage_results["Do you think that discussing a mental health disorder with your employer would have negative consequences?"]
+del percentage_results["Do you think that discussing a physical health issue with your employer would have negative consequences?"]
+
+print("")
+print("Graph input:", percentage_results)
+
+
+def survey(number_results, percentage_results, category_names):
+    labels = list(percentage_results.keys())
+    data = np.array(list(percentage_results.values()))
+    data_cum = data.cumsum(axis=1)
+    category_colors = plt.get_cmap("RdYlGn")(
+        np.linspace(0.15, 0.85, data.shape[1]))
+
+    fig, ax = plt.subplots(figsize=(9.2, 5))
+    ax.invert_yaxis()
+    ax.xaxis.set_visible(False)
+    ax.set_xlim(0, np.sum(data, axis=1).max())
+
+    for i, (colname, color) in enumerate(zip(category_names, category_colors)):
+        widths = data[:, i]
+        starts = data_cum[:, i] - widths
+        ax.barh(labels, widths, left=starts, height=0.5,
+                label=colname, color=color)
+
+        xcenters = starts + widths / 2
+        numbers = np.array(list(number_results.values()))[:, i]
+
+        r, g, b, _ = color
+        text_color = "white" if r * g * b < 0.5 else "darkgrey"
+        for y, (x, c) in enumerate(zip(xcenters, numbers)):
+            ax.text(x, y, str(int(c)),
+                    ha="center", va="center", color=text_color)
+    ax.legend(ncol=len(category_names), bbox_to_anchor=(0, 1),
+              loc="lower left", fontsize="small")
+    return fig, ax
+
+
+survey(number_results, percentage_results, category_names)
+plt.savefig("Discrete.png")
+plt.tight_layout()
 plt.show()
 ```
+![image](https://github.com/Makar-Data/python_plots/assets/152608115/13b242e0-86b0-4ce4-8694-e66c225f7031)
+
