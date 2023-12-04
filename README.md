@@ -157,7 +157,7 @@ data = [go.Bar(y=y,
 
 plot(dict(data=data, layout=layout))
 ```
-![image](https://github.com/Makar-Data/python_plots/assets/152608115/3256196f-50f3-438a-a1c8-dd012f2bc8d8)
+![image](https://github.com/Makar-Data/python_plots/assets/152608115/b73efe41-5885-4bc4-b07f-80c350316c16)
 
 ---
 
